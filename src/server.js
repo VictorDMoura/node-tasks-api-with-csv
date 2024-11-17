@@ -14,6 +14,10 @@ const server = http.createServer(async (req, res) => {
   });
 
   if (route) {
+    const routeParam = req.url.match(route.path);
+    const { query, ...params } = routeParam.groups;
+    req.params = params;
+    req.query = query;
     return route.handler(req, res);
   }
 
