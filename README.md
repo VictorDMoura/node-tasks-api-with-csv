@@ -1,0 +1,6 @@
+- [ ] Deve ser possível criar uma task no banco de dados, enviando os campos title e description por meio do body da requisição.
+- [ ] Deve ser possível listar todas as tasks salvas no banco de dados.
+- [ ] Deve ser possível realizar uma busca, filtrando as tasks pelo title e description
+- [ ] Deve ser possível atualizar uma task pelo id.
+- [ ] Deve ser possível remover uma task pelo id.
+- [ ] Deve ser possível marcar a task como completa ou não. Isso significa que se a task estiver concluída, deve voltar ao seu estado “normal”.
