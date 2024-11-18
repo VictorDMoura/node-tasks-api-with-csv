@@ -19,6 +19,19 @@ export class Database {
     fs.writeFile(databasePath, JSON.stringify(this.#database));
   }
 
+  findById(table, id) {
+    const data = this.#database[table] ?? [];
+    return data.findIndex((row) => row.id === id);
+  }
+
+  getTaskById(table, id) {
+    const rowIndex = this.findById(table, id);
+    if (rowIndex > -1) {
+      return this.#database[table][rowIndex];
+    }
+    return null;
+  }
+
   select(search, table) {
     let data = this.#database[table] ?? [];
     if (search) {
@@ -44,7 +57,7 @@ export class Database {
   }
 
   update(table, id, data) {
-    const rowIndex = this.#database[table].findIndex((row) => row.id === id);
+    const rowIndex = this.findById(table, id);
     if (rowIndex > -1) {
       this.#database[table][rowIndex] = {
         ...this.#database[table][rowIndex],
@@ -55,7 +68,7 @@ export class Database {
   }
 
   delete(table, id) {
-    const rowIndex = this.#database[table].findIndex((row) => row.id === id);
+    const rowIndex = this.findById(table, id);
     if (rowIndex > -1) {
       this.#database[table].splice(rowIndex, 1);
       this.#persist();

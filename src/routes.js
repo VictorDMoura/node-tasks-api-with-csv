@@ -42,6 +42,14 @@ export const routes = [
     handler: async (req, res) => {
       const { id } = req.params;
       const { title, description } = req.body;
+
+      const index = database.findById(TABELE_DATABASE, id);
+      if (index < 0) {
+        return res
+          .writeHead(404)
+          .end(JSON.stringify({ message: "Task not found" }));
+      }
+
       const updated_at = new Date();
 
       if (!description) {
@@ -64,7 +72,36 @@ export const routes = [
     path: buildRoutePath("/tasks/:id"),
     handler: async (req, res) => {
       const { id } = req.params;
+      const index = database.findById(TABELE_DATABASE, id);
+      if (index < 0) {
+        return res
+          .writeHead(404)
+          .end(JSON.stringify({ message: "Task not found" }));
+      }
       database.delete(TABELE_DATABASE, id);
+      return res.writeHead(204).end();
+    },
+  },
+
+  {
+    method: "PATCH",
+    path: buildRoutePath("/tasks/:id/complete"),
+    handler: async (req, res) => {
+      const { id } = req.params;
+      const index = database.findById(TABELE_DATABASE, id);
+      if (index < 0) {
+        return res
+          .writeHead(404)
+          .end(JSON.stringify({ message: "Task not found" }));
+      }
+
+      const task = database.getTaskById(TABELE_DATABASE, id);
+      if (task.completed_at) {
+        database.update(TABELE_DATABASE, id, { completed_at: null });
+        return res.writeHead(204).end();
+      }
+      const completed_at = new Date();
+      database.update(TABELE_DATABASE, id, { completed_at });
       return res.writeHead(204).end();
     },
   },
