@@ -58,4 +58,14 @@ export const routes = [
       return res.writeHead(204).end();
     },
   },
+
+  {
+    method: "DELETE",
+    path: buildRoutePath("/tasks/:id"),
+    handler: async (req, res) => {
+      const { id } = req.params;
+      database.delete(TABELE_DATABASE, id);
+      return res.writeHead(204).end();
+    },
+  },
 ];
