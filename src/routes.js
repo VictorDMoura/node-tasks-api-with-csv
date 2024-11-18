@@ -1,7 +1,6 @@
 import { Database } from "./database.js";
 import { randomUUID } from "node:crypto";
 import { buildRoutePath } from "./utils/build-route-path.js";
-import path from "node:path";
 
 const database = new Database();
 const TABELE_DATABASE = "tasks";
@@ -11,7 +10,9 @@ export const routes = [
     method: "GET",
     path: buildRoutePath("/tasks"),
     handler: (req, res) => {
-      const tasks = database.select(null, "tasks");
+      const query = req.query;
+
+      const tasks = database.select(query, "tasks");
       return res.end(JSON.stringify(tasks));
     },
   },

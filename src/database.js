@@ -34,13 +34,14 @@ export class Database {
 
   select(search, table) {
     let data = this.#database[table] ?? [];
-    if (search) {
-      data.filter((row) => {
-        return Object.entries(search).some(([key, value]) => {
-          return row[key].toLowerCase().includes(value.toLowerCase());
-        });
-      });
-    }
+    const { title, description } = search;
+    data = data.filter((row) => {
+      const titleMatch = title ? row.title.toLowerCase().includes(title) : true;
+      const descriptionMatch = description
+        ? row.description.toLowerCase().includes(description)
+        : true;
+      return titleMatch && descriptionMatch;
+    });
 
     return data;
   }
