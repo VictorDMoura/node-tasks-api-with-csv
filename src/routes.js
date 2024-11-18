@@ -1,6 +1,7 @@
 import { Database } from "./database.js";
 import { randomUUID } from "node:crypto";
 import { buildRoutePath } from "./utils/build-route-path.js";
+import { saveCsvFileToDatabase } from "./stream/read-file-csv.js";
 
 const database = new Database();
 const TABELE_DATABASE = "tasks";
@@ -22,6 +23,25 @@ export const routes = [
     path: buildRoutePath("/tasks"),
     handler: async (req, res) => {
       const { title, description } = req.body;
+      if (!title && !description) {
+        saveCsvFileToDatabase(database);
+        return res
+          .writeHead(201)
+          .end(JSON.stringify({ message: "Adding json by a csv file" }));
+      }
+
+      if (!title) {
+        return res
+          .writeHead(400)
+          .end(JSON.stringify({ message: "Title is required" }));
+      }
+
+      if (!description) {
+        return res
+          .writeHead(400)
+          .end(JSON.stringify({ message: "Description is required" }));
+      }
+
       const task = {
         id: randomUUID(),
         title,
@@ -43,6 +63,18 @@ export const routes = [
     handler: async (req, res) => {
       const { id } = req.params;
       const { title, description } = req.body;
+
+      if (!title) {
+        return res
+          .writeHead(400)
+          .end(JSON.stringify({ message: "Title is required" }));
+      }
+
+      if (!description) {
+        return res
+          .writeHead(400)
+          .end(JSON.stringify({ message: "Description is required" }));
+      }
 
       const index = database.findById(TABELE_DATABASE, id);
       if (index < 0) {
